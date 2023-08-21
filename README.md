@@ -5,7 +5,7 @@ voice assistant following 80/20 rule
 once i add gpt support it will work flawlessly
 
 1. streaming videos/music
-2. ask wikiedia
+2. ask wikipedia
 3. udict support
 
 ## depedencies
