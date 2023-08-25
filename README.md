@@ -1,11 +1,17 @@
 # school-proj
 voice assistant following 80/20 rule
 
+## installation
+
+```
+pip install -r requirements.txt
+```
+
 ## features 
 once i add gpt support it will work flawlessly
 
 1. streaming videos/music
-2. ask wikipedia
+2. ask wikiedia
 3. udict support
 
 ## depedencies
