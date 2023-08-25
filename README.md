@@ -1,5 +1,5 @@
 # school-proj
-voice assistant following 80/20 rule
+voice assistant following 80/20 rule and my bash scripts which are in ./bash-scripts
 
 ## installation
 
