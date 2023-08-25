@@ -4,7 +4,7 @@ voice assistant following 80/20 rule and my bash scripts which are in ./bash-scr
 ## installation
 
 ```
-pip install -r requirements.txt
+git clone https://github.com/yumpyy/school-proj.git && pip install -r requirements.txt
 ```
 
 ## features 
