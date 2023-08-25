@@ -1,0 +1,8 @@
+#!/bin/bash
+
+id=$(curl -s https://api.consumet.org/anime/gogoanime/$(echo $1 | tr ' ' '-')\?page\=\{1\} | jq . | grep "id" | cut -d'"' -f4 | fzf)
+echo "streaming : $id"
+
+url=$(curl -s https://api.consumet.org/anime/gogoanime/watch/$id-episode-$2 | jq . | grep "\.$3\." | cut -d'"' -f4)
+
+mpv --save-position-on-quit --really-quiet $url

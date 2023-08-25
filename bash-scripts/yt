@@ -1,0 +1,183 @@
+#!/bin/bash
+
+# --- Variables set
+
+FEED_PATH="$HOME/doc/scripts/scrappers/yt/feed.txt"
+FZF_FORMAT="fzf --border --border-label-pos=0:bottom --color=label:bold:red --border-label="
+
+# --- Functions
+
+usage() {
+cat << EOF
+Usage: yt [OPTION...] [QUERY]
+    -h    prints help
+    -f    to view feed
+    -s    for searching
+    -c    for searching for only channel
+    -a    for subscribing channels
+    -p    for converting newpipe subscription
+EOF
+}
+
+# -- channel search
+
+csearch() {
+  query=$(echo $query | tr ' ' '+')
+
+  url="https://inv.vern.cc/search?q=$query&page=1&type=channel"
+  curl -s $url > temp.txt 
+  # scrap=$(curl $url)
+  # echo "$url"
+  cat temp.txt | grep "/channel/" | cut -d'"' -f4 | uniq > url.txt
+  cat temp.txt | grep "channel-name" | cut -d'>' -f2 | uniq > name.txt
+
+  paste -d ',' name.txt url.txt > channelsearch.txt
+  # cat channelsearch.txt
+  channelfeed="https://inv.vern.cc/feed"$(cat channelsearch.txt | grep "$(cat channelsearch.txt | cut -d',' -f1 | $FZF_FORMAT)" | cut -d',' -f2)""
+  # echo "$channelfeed" 
+  printf "Scrapping...\n"
+  curl -s $channelfeed > rss.xml
+
+  # choosing videos
+  cat rss.xml | grep "media:title" | cut -d'>' -f2 | cut -d'<' -f1 > title.txt
+  cat rss.xml | grep "a href" | cut -d'"' -f2 > videos.txt
+  paste -d"," title.txt videos.txt > vidname.txt
+  choosevideo="$(cat vidname.txt | cut -d',' -f1 | $FZF_FORMAT" Video ")"
+
+  quality="$(printf "144\n240\n360\n480\n720\n1080" | $FZF_FORMAT" Quality ")"
+  printf "Playing : "$choosevideo"\n"
+  printf "Waiting for MPV..\n"
+
+  mpv --ytdl-format="bestvideo[height<=?$quality]+bestaudio[ext=m4a]" --save-position-on-quit --really-quiet $(cat vidname.txt | grep "$choosevideo" | cut -d',' -f2)
+
+  # cleaning up
+  echo "$choosevideo" >> ~/yt-history.txt
+  rm vidname.txt title.txt videos.txt rss.xml name.txt channelsearch.txt url.txt temp.txt
+}
+
+# -- feed browser
+
+subs() {
+  # choosing channel
+  choosechannel=$(cat "$FEED_PATH" | grep "$(cat "$FEED_PATH" | cut -d ',' -f1 | $FZF_FORMAT" Channel ")" | cut -d ',' -f2)
+  printf "Searching : "$choosechannel"\n"
+  curl -s "$choosechannel" > rss.xml
+  
+  # choosing videos
+  cat rss.xml | grep "media:title" | cut -d'>' -f2 | cut -d'<' -f1 > title.txt
+  cat rss.xml | grep "a href" | cut -d'"' -f2 > videos.txt
+  paste -d"," title.txt videos.txt > vidname.txt
+  choosevideo="$(cat vidname.txt | cut -d',' -f1 | $FZF_FORMAT" Video ")"
+
+  quality="$(printf "144\n240\n360\n480\n720\n1080" | $FZF_FORMAT" Quality ")"
+  printf "Playing : \"$choosevideo\"\n"
+  printf "Waiting for MPV..\n"
+  mpv --ytdl-format="bestvideo[height<=?$quality]+bestaudio[ext=m4a]" --save-position-on-quit $(cat vidname.txt | grep "$choosevideo" | cut -d',' -f2)
+
+  # cleaning up
+  echo "$choosevideo" >> ~/yt-history.txt
+  rm vidname.txt title.txt videos.txt rss.xml
+  printf "Quiting..\n"
+}
+
+# -- searching query,
+#       1. will add support for filter
+#       2. combine channel filter here
+
+search() {
+  query=$(echo $query | tr ' ' '+')
+  curl -s "https://inv.vern.cc/search?q=$query&page=1&date=none&type=video&duration=none&sort=relevance" > searchurl
+
+  cat searchurl | grep "<p dir" | cut -d'"' -f2 > vidurls
+  cat searchurl | grep "<p dir" | cut -d'>' -f3 | cut -d'<' -f1 > vidtitles
+  cat searchurl | grep "channel-name" | cut -d'>' -f2 > channelname
+  paste -d':,' channelname vidtitles vidurls > search_results
+
+  vid="https://inv.vern.cc$(cat search_results | grep "$(cat search_results | cut -d',' -f1 | $FZF_FORMAT" Videos ")" | cut -d',' -f2)"
+  
+  quality="$(printf "144\n240\n360\n480\n720\n1080" | $FZF_FORMAT" Quality ")"
+  echo "Playing : "$vid""
+  echo "Waiting for MPV.."
+  mpv --ytdl-format="bestvideo[height<=?$quality]+bestaudio[ext=m4a]" --save-position-on-quit "$vid"
+
+  rm vidtitles vidurls searchurl channelname search_results
+}
+
+# -- adding feeds to feed.txt
+
+feedadd() {
+  query=$(echo $query | tr ' ' '+')
+
+  url="https://inv.vern.cc/search?q=$query&page=1&type=channel"
+  echo "Searching..."
+  curl -s $url > temp.txt
+  # echo "$url"
+  cat temp.txt | grep "/channel/" | cut -d'"' -f4 | uniq > url.txt
+  cat temp.txt | grep "channel-name" | cut -d'>' -f2 | uniq > name.txt
+
+  paste -d ',' name.txt url.txt > channelsearch.txt
+  # cat channelsearch.txt
+
+  channelname="$(cat channelsearch.txt | cut -d',' -f1 | $FZF_FORMAT)"
+  channelfeed="$(cat channelsearch.txt | grep "$channelname" | head -1 | sed 's/\/channel\//https:\/\/inv\.vern\.cc\/feed\/channel\//g')"
+  echo "$channelfeed" >> $FEED_PATH
+
+  echo "Feed added."
+  rm url.txt temp.txt name.txt channelsearch.txt
+}
+
+pipeconvert() {
+  cat $filelocation | grep url | cut -d'"' -f4 | sed 's/https:\/\/www\.youtube\.com/https:\/\/inv\.vern\.cc\/feed/g' > tempurl.txt
+  cat $filelocation | grep name | cut -d'"' -f4 > tempname.txt
+
+  paste -d',' tempname.txt tempurl.txt >> feed.txt
+  echo "Converted and added to your feed"
+  rm tempurl.txt tempname.txt
+}
+
+
+# --- Flags
+
+while getopts "a:c:p:s:hf" args; do
+  case $args in 
+    s ) 
+      query="${OPTARG}"
+      if [[ {OPTARG} == "" ]]; then
+        echo "Empty query field"
+      fi
+      search
+      ;;
+    f )
+      subs
+      ;;
+    c )
+      query="${OPTARG}"
+      if [[ {OPTARG} == "" ]]; then
+        echo "Empty query field"
+      fi
+      csearch
+      ;;
+    a )
+      query="${OPTARG}"
+      if [[ {OPTARG} == "" ]]; then
+        echo "Empty query field"
+      fi
+      feedadd
+      ;;
+    p ) 
+      filelocation="${OPTARG}"
+      if [[ {OPTARG} == "" ]]; then
+        echo "Empty file location"
+      fi
+      pipeconvert 
+      ;;
+    h )
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Invalid option, try -h"
+      exit 0
+      ;;
+    esac
+done
