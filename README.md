@@ -1,17 +1,17 @@
 # school-proj
-voice assistant following 80/20 rule
+voice assistant following 80/20 rule and my bash scripts which are in ./bash-scripts
 
 ## installation
 
 ```
-pip install -r requirements.txt
+git clone https://github.com/yumpyy/school-proj.git && pip install -r requirements.txt
 ```
 
 ## features 
 once i add gpt support it will work flawlessly
 
 1. streaming videos/music
-2. ask wikiedia
+2. ask wikipedia
 3. udict support
 
 ## depedencies
