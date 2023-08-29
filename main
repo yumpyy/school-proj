@@ -3,7 +3,6 @@
 import wave
 import sys
 import os
-import pyaudio
 
 # my modules
 from yt import yt 
@@ -15,7 +14,7 @@ SetLogLevel(0)
 TTS_MODEL="./tts/model.onnx"
 TRANSCRIBER_MODEL="vosk-model"
 
-wf = wave.open("temp.wav", "rb")
+wf = wave.open(sys.argv[1], "rb")
 if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
     print("Audio file must be WAV format mono PCM.")
     sys.exit(1)
@@ -34,7 +33,7 @@ while True:
         print(rec.Result())
 
 text = rec.FinalResult().split('"')[-2]
-# print(text)
+print(text)
 
 command = text.split()[0]
 query = text.split()[1:]
