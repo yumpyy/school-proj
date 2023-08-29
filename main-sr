@@ -3,6 +3,7 @@
 import wave
 import sys
 import os
+import time
 import pyaudio
 
 # my modules
@@ -11,8 +12,9 @@ from vosk import Model, KaldiRecognizer, SetLogLevel
 from word import word
 
 SetLogLevel(0)
-TTS_MODEL="./tts/model.onnx"
-# TRANSCRIBER_MODEL="vosk-model"
+ttsModel="./tts/model.onnx"
+# transcribeModel="vosk-model"
+endTime = time.time() + 5 
 
 model = Model("vosk-model")
 
@@ -24,14 +26,13 @@ mic = pyaudio.PyAudio()
 stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192)
 stream.start_stream()
 
-while True:
+while time.time() <= endTime:
     data = stream.read(4096)
     if rec.AcceptWaveform(data):
         print(rec.Result())
-    elif 
 
 text = rec.FinalResult().split('"')[-2]
-print(text)
+print(f"this is the final text {text}")
 
 command = text.split()[0]
 query = text.split()[1:]
@@ -43,18 +44,22 @@ if command == "wiki":
     
     shell_exec = f"curl -sL 'https://en.wikipedia.org/wiki/{query}' | grep '<p>' | sed -e 's/<[^>]*>//g' -e 's/\&\#[0-9][0-9]//g' -e 's/\;[0-9][0-9]\;//g'  -e 's/\;//g' | head -1 > temp.txt"
     os.system(shell_exec)
-    tts = f"cat temp.txt | piper --model {TTS_MODEL} --output_raw | aplay -q -r 22050 -f S16_LE -t raw"
+    
+    tts = f"cat temp.txt | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw"
     os.system(tts)
     # os.system("rm ./temp.txt")
 
 elif command == "play":
+
     ttsquery = " ".join(query)
-    tts = f'echo Ok, Playing "{ttsquery}" now | piper --model {TTS_MODEL} --output_raw | aplay -q -r 22050 -f S16_LE -t raw & PIDTTS=$!'
+    tts = f'echo Ok, Playing "{ttsquery}" now | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw & PIDTTS=$!'
     # print(tts)
     os.system(tts)
+    
     query = "+".join(query)
     # print(query)
     yt_command = yt(query) + '& PIDYT=$!'
+
     final_command = tts + '&' + yt_command
     os.system(yt_command)
     os.system("wait $PIDTTS")
@@ -63,7 +68,8 @@ elif command == "play":
 elif command == "define":
     query = " ".join(query)
     definiton = word(query)
-    tts = f'echo "The word {query} means {definiton}" | piper --model {TTS_MODEL} --output_raw | aplay -q -r 22050 -f S16_LE -t raw & PIDTTS=$!'
+
+    tts = f'echo "The word {query} means {definiton}" | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw & PIDTTS=$!'
     # print(definiton)
     # print(tts)
     os.system(tts)
