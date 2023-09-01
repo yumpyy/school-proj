@@ -3,3 +3,4 @@ pocketsphinx
 pyaudio
 vosk
 piper
+gpt4all

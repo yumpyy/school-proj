@@ -4,7 +4,9 @@ import wave
 import sys
 import os
 
+
 # my modules
+from gptSupport import gptRespond
 from yt import yt 
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from word import word
@@ -71,3 +73,11 @@ elif command == "define":
     # print(tts)
     os.system(tts)
     # os.system("rm ./temp.txt")
+else:
+    print(query)
+    query = str(command) + " " + " ".join(query)
+    print(query)
+    response = gptRespond(query)
+    print(f"Response : {response}")
+    tts = f'echo "{response}" | piper --model {TTS_MODEL} --output_raw | aplay -q -r 22050 -f S16_LE -t raw'
+    os.system(tts)

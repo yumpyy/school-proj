@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 
-import wave
-import sys
 import os
 import time
 import pyaudio
 
 # my modules
+from gptSupport import gptRespond
 from yt import yt 
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from word import word
 
 SetLogLevel(0)
 ttsModel="./tts/model.onnx"
-# transcribeModel="vosk-model"
-endTime = time.time() + 5 
+transcribeModel="vosk-model"
+endTime = time.time() + 10 
 
 model = Model("vosk-model")
 
@@ -26,10 +25,13 @@ mic = pyaudio.PyAudio()
 stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192)
 stream.start_stream()
 
-while time.time() <= endTime:
-    data = stream.read(4096)
-    if rec.AcceptWaveform(data):
-        print(rec.Result())
+try:
+    while time.time() <= endTime:
+        data = stream.read(4096)
+        if rec.AcceptWaveform(data):
+            print(rec.Result())
+except IndexError:
+    print('You were quiet!')
 
 text = rec.FinalResult().split('"')[-2]
 print(f"this is the final text {text}")
@@ -74,3 +76,11 @@ elif command == "define":
     # print(tts)
     os.system(tts)
     # os.system("rm ./temp.txt")
+else:
+    print(query)
+    query = str(command) + " " + " ".join(query)
+    print(query)
+    response = gptRespond(query)
+    print(f"Response : {response}")
+    tts = f'echo "{response}" | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw'
+    os.system(tts)
