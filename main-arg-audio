@@ -1,67 +1,65 @@
 #!/usr/bin/env python3
 
+import wave
+import sys
 import os
-import time
-import pyaudio
+
+from vosk import Model, KaldiRecognizer, SetLogLevel
 
 # my modules
-from gptSupport import gptRespond
-from yt import yt 
-from vosk import Model, KaldiRecognizer, SetLogLevel
-from word import word
+from myMods.gptSupport import gptRespond
+from myMods.yt import yt 
+from myMods.word import word
 
 SetLogLevel(0)
+
 ttsModel="./tts/model.onnx"
-transcribeModel="vosk-model"
-endTime = time.time() + 10 
+transcModel="vosk-model"
+
+wf = wave.open(sys.argv[1], "rb")
+if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
+    print("Audio file must be WAV format mono PCM.")
+    sys.exit(1)
 
 model = Model("vosk-model")
 
-rec = KaldiRecognizer(model, 16000)
+rec = KaldiRecognizer(model, wf.getframerate())
 rec.SetWords(True)
 rec.SetPartialWords(True)
 
-mic = pyaudio.PyAudio()
-stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8192)
-stream.start_stream()
-
-try:
-    while time.time() <= endTime:
-        data = stream.read(4096)
-        if rec.AcceptWaveform(data):
-            print(rec.Result())
-except IndexError:
-    print('You were quiet!')
+while True:
+    data = wf.readframes(4000)
+    if len(data) == 0:
+        break
+    if rec.AcceptWaveform(data):
+        print(rec.Result())
 
 text = rec.FinalResult().split('"')[-2]
-print(f"this is the final text {text}")
+print(text)
 
 command = text.split()[0]
 query = text.split()[1:]
 # print(query)
 
 if command == "wiki":
+
     query = "_".join(query).title()
     # print(query) 
     
     shell_exec = f"curl -sL 'https://en.wikipedia.org/wiki/{query}' | grep '<p>' | sed -e 's/<[^>]*>//g' -e 's/\&\#[0-9][0-9]//g' -e 's/\;[0-9][0-9]\;//g'  -e 's/\;//g' | head -1 > temp.txt"
     os.system(shell_exec)
-    
     tts = f"cat temp.txt | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw"
     os.system(tts)
     # os.system("rm ./temp.txt")
 
 elif command == "play":
-
     ttsquery = " ".join(query)
     tts = f'echo Ok, Playing "{ttsquery}" now | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw & PIDTTS=$!'
     # print(tts)
     os.system(tts)
-    
     query = "+".join(query)
     # print(query)
     yt_command = yt(query) + '& PIDYT=$!'
-
     final_command = tts + '&' + yt_command
     os.system(yt_command)
     os.system("wait $PIDTTS")
@@ -70,7 +68,6 @@ elif command == "play":
 elif command == "define":
     query = " ".join(query)
     definiton = word(query)
-
     tts = f'echo "The word {query} means {definiton}" | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw & PIDTTS=$!'
     # print(definiton)
     # print(tts)
