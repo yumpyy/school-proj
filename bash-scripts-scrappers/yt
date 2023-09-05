@@ -15,7 +15,7 @@ Usage: yt [OPTION...] [QUERY]
     -s    for searching
     -c    for searching for only channel
     -a    for subscribing channels
-    -p    for converting newpipe subscription
+    -p    for importing newpipe subscription
 EOF
 }
 

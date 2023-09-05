@@ -35,3 +35,7 @@ ani <name> <episode-no>
 ## dict
 
 urban dictionary in terminal
+
+```
+dict <word>
+```
