@@ -10,7 +10,7 @@ from myMods.word import word
 
 
 # ----- Transc and TTS set
-ttsModel="./tts/model.onnx"
+ttsModel="./models/model.onnx"
 
 def mainText(text):
 # print(text.split())

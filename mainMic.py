@@ -17,7 +17,7 @@ from myMods.word import word
 SetLogLevel(0)
 
 # ----- Transc and TTS set
-ttsModel="./tts/model.onnx"
+ttsModel="./models/model.onnx"
 transcModel="vosk-model"
 model = Model("vosk-model")
 endTime = time.time() + 10 

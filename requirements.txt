@@ -4,3 +4,4 @@ pyaudio
 vosk
 piper
 gpt4all
+PyQt6
