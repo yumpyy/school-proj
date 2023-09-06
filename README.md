@@ -4,10 +4,14 @@ voice assistant/chat bot (?) and my bash scripts which are in ./bash-scripts-scr
 ![gui-preview](./gui-preview.png)
 
 ## installation
-
+1. 
 ```
 git clone https://github.com/yumpyy/school-proj.git && pip install -r requirements.txt
 ```
+
+2. install [megumin voice model](https://huggingface.co/DogeLord/megumin/tree/main) for tts and place it in `./tts` directory
+
+3. install `orca-mini-3b.ggmlv3.q4_0.bin` from here [gpt4all model](https://gpt4all.io/models/models.json) and keep it in main folder
 
 
 ## depedencies
