@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>820</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:#24273a;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="minimumSize">
+    <size>
+     <width>800</width>
+     <height>0</height>
+    </size>
+   </property>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>821</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="2">
+      <widget class="QPushButton" name="micButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+background-color: #363a4f;
+border-radius:17px;
+margin: 0px 5px 5px 0px;
+width: 35px;
+height:35px;
+color:#a5adcb;
+}
+QPushButton:focus {
+ background-color: #ed8796; 
+}</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="inputBox">
+       <property name="styleSheet">
+        <string notr="true">QLineEdit{
+margin:0px 0px  5px 5px;
+height:35px;
+border-radius : 10px;
+background-color: #494d64;
+color:#cad3f5;
+padding: 0px 0px 0px 6px;
+}
+QLineEdit:focus{
+border:  #939ab7 3px solid;
+}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="sendButton">
+       <property name="styleSheet">
+        <string notr="true">margin: 0px 0px 5px 0px;
+width: 35px;
+height:35px;
+background-color: #363a4f;
+border-radius:17px;
+color:#a5adcb;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QListWidget" name="chatBox">
+       <property name="styleSheet">
+        <string notr="true">margin: 0px 5px 0px 5px;
+background-color:#1e2030;
+</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
