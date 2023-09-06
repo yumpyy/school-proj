@@ -1,5 +1,7 @@
 # school-project
-voice assistant following 80/20 rule and my bash scripts which are in ./bash-scripts
+voice assistant/chat bot (?) and my bash scripts which are in ./bash-scripts-scrappers/
+
+![gui-preview](./gui-preview.png)
 
 ## installation
 
@@ -17,6 +19,7 @@ git clone https://github.com/yumpyy/school-proj.git && pip install -r requiremen
 
 ## todo
 - [ ] install script
+- [x] add gui
 - [x] use gpt3.5 api for queries
     | couldnt get openai gpt api key, instead im using gpt4all orca mini model
 - [ ] remove vosk-transcriber logs
