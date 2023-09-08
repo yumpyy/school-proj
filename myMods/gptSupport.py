@@ -1,6 +1,6 @@
 from gpt4all import GPT4All
 
-MODEL_PATH = "/home/anupam/doc/school/school-proj/models/"
+MODEL_PATH = "../models/"
 
 def gptRespond(query):
     model = GPT4All("orca-mini-3b.ggmlv3.q4_0.bin", model_path=MODEL_PATH, allow_download=False)
@@ -12,4 +12,4 @@ def gptRespond(query):
         print(response)
         return response
 
-# gptRespond("what time is it")
+gptRespond("what time is it")
