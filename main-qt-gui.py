@@ -3,8 +3,9 @@ from PyQt5 import QtWidgets, QtCore, uic
 from PyQt5.QtGui import QFont 
 import qtawesome as qta
 
-import mainMic
-import mainText
+# --- My Modules
+from mainMic import micRecord, commandChecks
+from mainText import mainText
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -44,7 +45,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.inputBox.setText('')
 
         else:
-            reponse = mainText.mainText(message)
+            reponse = mainText(message)
             print(reponse)
             self.chatBox.addItem(message)
             # self.chatBox.setStyleSheet("QListWidget::item {background-color:#494d64; padding: 10px;margin: 5px 15px;border-radius: 10px;color:#cad3f5;}")
@@ -53,9 +54,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.inputBox.setText('')
 
     def micClick(self):
-        mainMic.micRecord()
-        trans = mainMic.micRecord()
-        response = mainMic.commandChecks(trans)
+        trans = micRecord()
+        response = commandChecks(trans)
 
         if len(trans) == 0:
             response = "Sorry, I could not hear you. Please try again"

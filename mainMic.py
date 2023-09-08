@@ -61,8 +61,6 @@ def micRecord():
     return text
 
 
-textSplit = micRecord().split()
-
 # --- Command Checks
 
 def commandChecks(text):
@@ -109,7 +107,7 @@ def commandChecks(text):
         # os.system("rm ./temp.txt")
 
     
-    elif weatherWordCheck(textSplit):
+    elif weatherWordCheck(str(text).split()):
         # print('----\nWORKINF')
         response = wttr()
 
