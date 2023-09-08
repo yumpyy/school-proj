@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
+ <class>Voice Assist</class>
  <widget class="QMainWindow" name="Voice Assist">
   <property name="geometry">
    <rect>
@@ -33,31 +33,11 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="2">
-      <widget class="QPushButton" name="micButton">
-       <property name="styleSheet">
-        <string notr="true">QPushButton{
-background-color: #363a4f;
-border-radius:17px;
-margin: 0px 5px 5px 0px;
-width: 35px;
-height:35px;
-color:#a5adcb;
-}
-QPushButton:focus {
- background-color: #ed8796; 
-}</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QLineEdit" name="inputBox">
        <property name="styleSheet">
         <string notr="true">QLineEdit{
-margin:0px 0px  5px 5px;
+margin:0px 0px  10px 5px;
 height:35px;
 border-radius : 10px;
 background-color: #494d64;
@@ -91,6 +71,26 @@ color:#a5adcb;</string>
         <string notr="true">margin: 0px 5px 0px 5px;
 background-color:#1e2030;
 </string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="micButton">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+background-color: #363a4f;
+border-radius:17px;
+margin: 0px 5px 5px 0px;
+width: 35px;
+height:35px;
+color:#a5adcb;
+}
+QPushButton:focus {
+ background-color: #ed8796; 
+}</string>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>

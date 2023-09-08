@@ -8,10 +8,19 @@ import pyaudio
 
 
 # --- Modules in directory
-# from myMods.weather import wttr
+from myMods.weather import wttr
 from myMods.gptSupport import gptRespond
 from myMods.yt import yt 
 from myMods.word import word
+
+
+def weatherWordCheck(text):
+    weatherWords = ['weather', 'temprature', '']
+    for word in text:
+        if word in weatherWords:
+            return True
+    return False
+
 
 # --- Variable Set
 SetLogLevel(0)
@@ -43,20 +52,25 @@ def micRecord():
             if rec.AcceptWaveform(data):
                 print(rec.Result())
                 tempAudio.append(rec.Result())
+        text = rec.FinalResult().split('"')[-2]
+        print(f"this is the final text {text}")
 
-    except IndexError:
-        print('You were quiet!')
+    except:
+        text = 'You were quiet!'
 
-    print(f'----\n{tempAudio}\n----')
-    text = rec.FinalResult().split('"')[-2]
-    print(f"this is the final text {text}")
+    return text
+
+
+textSplit = micRecord().split()
+
+# --- Command Checks
+
+def commandChecks(text):
 
     command = text.split()[0]
     query = text.split()[1:]
-# print(query)
-
-
-# --- Command Checks
+    # print(query)
+    
 
     if command == "wiki":
         query = "_".join(query).title()
@@ -93,11 +107,25 @@ def micRecord():
         # print(tts)
         os.system(tts)
         # os.system("rm ./temp.txt")
+
+    
+    elif weatherWordCheck(textSplit):
+        # print('----\nWORKINF')
+        response = wttr()
+
+        tts = f"echo {response} | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw &"
+        os.system(tts)
+
+        return response
+    
     else:
         print(query)
         query = str(command) + " " + " ".join(query)
+        # query = str(text)
         print(query)
         response = gptRespond(query)
         print(f"Response : {response}")
         tts = f'echo "{response}" | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw'
         os.system(tts)
+
+        return response

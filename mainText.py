@@ -9,12 +9,20 @@ from myMods.yt import yt
 from myMods.word import word
 
 
+def weatherWordCheck(text):
+    weatherWords = ['weather', 'temprature', '']
+    for word in text:
+        if word in weatherWords:
+            return True
+    return False
+
+
 # ----- Transc and TTS set
 ttsModel="./models/model.onnx"
 
 def mainText(text):
 # print(text.split())
-
+    textSplit = text.split()
     command = text.split()[0]
     query = text.split()[1:]
 # print(query)
@@ -67,7 +75,7 @@ def mainText(text):
         return response
 
 # elif text.split() in weatherCheck:
-    elif command == "weather":
+    elif weatherWordCheck(textSplit):
         # print('----\nWORKINF')
         response = wttr()
 

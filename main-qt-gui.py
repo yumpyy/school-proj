@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtWidgets, QtCore, uic
-import PyQt5.QtGui as QtGui
+from PyQt5.QtGui import QFont 
 import qtawesome as qta
 
 import mainMic
@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.micButton = uiFile.findChild(QtWidgets.QPushButton, 'micButton')
         self.micButton.clicked.connect(self.micClick)
         self.micButton.setIcon(micIcon)
-        self.micButton.setIconSize(QtCore.QSize(28, 28))
+        self.micButton.setIconSize(QtCore.QSize(24, 24))
         
         self.sendButton = uiFile.findChild(QtWidgets.QPushButton, 'sendButton')
         self.sendButton.clicked.connect(self.messageBox)
@@ -31,9 +31,9 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.chatBox.setStyleSheet("QListWidget::item {background-color: #5b6078;padding: 10px;margin: 5px 15px;border-radius: 10px;color:#cad3f5;}")
         self.chatBox.setWordWrap(True)
-        # self.inputBox.setWordWrap(True)
+        self.chatBox.setAlternatingRowColors(True);
 
-        self.font = QtGui.QFont('Arial', 12)
+        self.font = QFont('Arial', 12)
         self.inputBox.setFont(self.font)
         self.chatBox.setFont(self.font)
         
@@ -47,13 +47,26 @@ class MainWindow(QtWidgets.QMainWindow):
             reponse = mainText.mainText(message)
             print(reponse)
             self.chatBox.addItem(message)
+            # self.chatBox.setStyleSheet("QListWidget::item {background-color:#494d64; padding: 10px;margin: 5px 15px;border-radius: 10px;color:#cad3f5;}")
             self.chatBox.addItem(reponse)
+
             self.inputBox.setText('')
 
     def micClick(self):
-        print('gex')
         mainMic.micRecord()
-        # 
+        trans = mainMic.micRecord()
+        response = mainMic.commandChecks(trans)
+
+        if len(trans) == 0:
+            response = "Sorry, I could not hear you. Please try again"
+            self.chatBox.addItem(response)
+
+        else:
+            self.chatBox.addItem(trans)
+            self.chatBox.addItem(response)
+
+            self.inputBox.setText('')
+            
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
