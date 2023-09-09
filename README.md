@@ -1,4 +1,4 @@
-# school-project (still incomplete)
+# school-project 
 voice assistant/chat bot (?) and my bash scripts which are in ./bash-scripts-scrappers/
 
 ![gui-preview](./gui-preview.png)
@@ -20,7 +20,7 @@ git clone https://github.com/yumpyy/school-proj.git && pip install -r requiremen
 ## todo
 - [ ] test on windows
 - [ ] install script
-- [ ] remove vosk-transcriber logs
+- [ ] better logs 
 - [x] add mysql-connector for logging chat history
 - [x] memory for gpt model
 - [x] add gui
