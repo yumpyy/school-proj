@@ -6,6 +6,7 @@ import qtawesome as qta
 # --- My Modules
 from mainMic import micRecord, commandChecks
 from mainText import mainText
+from myMods.dbManage import chatUpload
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -40,32 +41,33 @@ class MainWindow(QtWidgets.QMainWindow):
         
 
     def messageBox(self):
-        message = self.inputBox.text()
-        if len(message) == 0:
+        query = self.inputBox.text()
+        if len(query) == 0:
             self.inputBox.setText('')
 
         else:
-            reponse = mainText(message)
-            print(reponse)
-            self.chatBox.addItem(message)
-            # self.chatBox.setStyleSheet("QListWidget::item {background-color:#494d64; padding: 10px;margin: 5px 15px;border-radius: 10px;color:#cad3f5;}")
-            self.chatBox.addItem(reponse)
+            response = mainText(query)
+            print(response)
+            self.chatBox.addItem(query)
+            self.chatBox.addItem(response)
 
             self.inputBox.setText('')
+            chatUpload(query, response)
 
     def micClick(self):
-        trans = micRecord()
-        response = commandChecks(trans)
+        query = micRecord()
+        response = commandChecks(query)
 
-        if len(trans) == 0:
+        if len(query) == 0:
             response = "Sorry, I could not hear you. Please try again"
             self.chatBox.addItem(response)
 
         else:
-            self.chatBox.addItem(trans)
+            self.chatBox.addItem(query)
             self.chatBox.addItem(response)
 
             self.inputBox.setText('')
+            chatUpload(query, response)
             
 
 if __name__ == '__main__':
