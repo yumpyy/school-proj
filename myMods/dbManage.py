@@ -1,12 +1,14 @@
 import mysql.connector as m
 import datetime as dt
 
+HOST = "localhost"
+USER = "anupam"
+PASSWORD = "anupam"
 DATABASE = "test2"
-
 
 def chatUpload(query, response):
     
-    con = m.connect(host="localhost", user="anupam", passwd="anupam", database=DATABASE)
+    con = m.connect(host=HOST, user=USER, passwd=PASSWORD, database=DATABASE)
 
     if not con.is_connected():
         print("Error in connection, Try Again.")
@@ -42,10 +44,12 @@ def chatLoad():
     loadQuery = f"SELECT * FROM convo ORDER BY Time DESC LIMIT 1"
     cursor.execute(loadQuery)
 
-    chatHistory = str(cursor.fetchall())
+    chatHistory = cursor.fetchone()
     # chatHistory = []
     # for row in rows:
     #     chatHistory.append(row)
     print(chatHistory)
 
     return chatHistory
+
+chatLoad()

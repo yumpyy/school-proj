@@ -4,8 +4,8 @@ from PyQt5.QtGui import QFont
 import qtawesome as qta
 
 # --- My Modules
-from mainMic import micRecord, commandChecks
-from mainText import mainText
+from mainFunctions import micRecord, commandChecks, tts
+# from mainText import mainText
 from myMods.dbManage import chatUpload
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -46,17 +46,20 @@ class MainWindow(QtWidgets.QMainWindow):
             self.inputBox.setText('')
 
         else:
-            response = mainText(query)
+            result = commandChecks(query)
+            response = result[0]
             print(response)
             self.chatBox.addItem(query)
             self.chatBox.addItem(response)
+            tts(result[1])
 
             self.inputBox.setText('')
             chatUpload(query, response)
 
     def micClick(self):
         query = micRecord()
-        response = commandChecks(query)
+        result = commandChecks(query)
+        response = result[0]
 
         if len(query) == 0:
             response = "Sorry, I could not hear you. Please try again"
@@ -65,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.chatBox.addItem(query)
             self.chatBox.addItem(response)
+            tts(result[1])
 
             self.inputBox.setText('')
             chatUpload(query, response)
