@@ -1,5 +1,5 @@
-# school-project 
-voice assistant/chat bot (?) and my bash scripts which are in ./bash-scripts-scrappers/
+# voice assist
+voice assistant/chat bot (?) dunno why I made this
 
 ![gui-preview](./gui-preview.png)
 
