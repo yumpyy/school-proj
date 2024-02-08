@@ -52,3 +52,7 @@ def yt(query):
     shell_command = f"mpv --no-video --save-position-on-quit {link}"
     # print(shell_command)
     return shell_command
+
+def gptRespond(query):
+    shell_command = f'tgpt -q "{query}"'
+    return shell_command

@@ -1,6 +1,6 @@
 import sys
-from PyQt5 import QtWidgets, QtCore, uic
-from PyQt5.QtGui import QFont 
+from PyQt6 import QtWidgets, QtCore, uic
+from PyQt6.QtGui import QFont 
 import qtawesome as qta
 
 # --- My Modules
@@ -54,7 +54,6 @@ class MainWindow(QtWidgets.QMainWindow):
             tts(result[1])
 
             self.inputBox.setText('')
-            chatUpload(query, response)
 
     def micClick(self):
         query = micRecord()
@@ -71,7 +70,6 @@ class MainWindow(QtWidgets.QMainWindow):
             tts(result[1])
 
             self.inputBox.setText('')
-            chatUpload(query, response)
             
 
 if __name__ == '__main__':

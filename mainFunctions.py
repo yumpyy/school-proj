@@ -8,8 +8,7 @@ import pyaudio
 
 
 # --- Modules in directory
-from myMods.scrappers import wttr, word, yt
-from myMods.gptSupport import gptRespond
+from myMods.scrappers import wttr, word, yt, gptRespond
 
 
 def weatherWordCheck(text):
@@ -24,7 +23,7 @@ def weatherWordCheck(text):
 SetLogLevel(0)
 
 # ----- Transc and TTS set
-ttsModel="./models/model.onnx"
+ttsModel="./models/model2.onnx"
 transcModel="vosk-model"
 model = Model("vosk-model")
 endTime = time.time() + 10 
@@ -121,12 +120,13 @@ def commandChecks(text):
         return response, tts
     
     else:
-        print(query)
         query = str(command) + " " + " ".join(query)
         # query = str(text)
-        print(query)
-        response = gptRespond(query)
-        print(f"Response : {response}")
+        print("query: ",query)
+        response = os.popen(gptRespond(query)).read()
+        response = response.rstrip()
+        print("response : ", response)
         tts = f'echo "{response}" | piper --model {ttsModel} --output_raw | aplay -q -r 22050 -f S16_LE -t raw &'
+        print("tts:", tts)
 
         return response, tts

@@ -3,6 +3,5 @@ pocketsphinx
 pyaudio
 vosk
 piper
-gpt4all
 PyQt6
 mysql-connector-python
